@@ -18,7 +18,7 @@ public class Component {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String reference; // Unique reference for the component
+    private String reference;
     private String name;
     private String type; // e.g., "Filter", "Pump"
     private String description;
