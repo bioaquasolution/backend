@@ -30,3 +30,51 @@ Content-Type: application/json
     "email": "abderrahmen.talby@thexbyte.com.tn",
     "password": "admin"
 }
+
+
+
+
+### Get all Components
+GET http://localhost:8080/api/components
+Accept: application/json
+
+###
+
+### Get a Component by ID
+GET http://localhost:8080/api/components/1
+Accept: application/json
+
+###
+
+### Create a new Component
+POST http://localhost:8080/api/components
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjp7ImF1dGhvcml0eSI6IkFETUlOIn0sInN1YiI6ImFiZGVycmFobWVuLnRhbGJ5QHRoZXhieXRlLmNvbS50biIsImlhdCI6MTczNzQ1Nzk1MywiZXhwIjoxNzM3NTAxMTUzfQ.0ad-QZmqgIlKjwdnH9czT6DjDAJAQ-O2cHI96ZSVxHI
+
+{
+  "reference": "CMP-001",
+  "name": "Filter",
+  "type": "Filter",
+  "description": "High-quality filter for water purification",
+  "price": 120.50
+}
+
+###
+
+### Update an existing Component
+POST http://localhost:8080/api/components
+Content-Type: application/json
+
+{
+  "id": 1,
+  "reference": "CMP-001",
+  "name": "Advanced Filter",
+  "type": "Filter",
+  "description": "Updated high-quality filter for water purification",
+  "price": 150.00
+}
+
+###
+
+### Delete a Component by ID
+DELETE http://localhost:8080/api/components/1

@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<RoSystem> systems = new ArrayList<>();
-
+ 
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

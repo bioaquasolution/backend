@@ -2,6 +2,7 @@ package com.thexbyte.bioaqua.controllers;
  
  
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +20,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("api/auth/")
-@RequiredArgsConstructor
 @Tag(name = "Auth", description = "Endpoints for authentication")
 public class AuthController {
-
-    final UserService userService;
-
-    private  final AuthService authService;
+    @Autowired
+    private  UserService userService;
+    @Autowired
+    private   AuthService authService;
 
     @Operation(summary = "Get all", description = "Retrieve a list of all registered users")
     @ApiResponses(value = {
