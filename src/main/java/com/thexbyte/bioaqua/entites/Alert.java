@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,15 +15,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Component {
+public class Alert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String reference;
-    private String name;
-    private String type; 
-    private double price;
+    private String title; 
+    private String siverity;
+    private String content;
+    private Date alertDate;
     @JsonIgnore
-    @ManyToMany(mappedBy = "components")
-    private List<RoSystem> roSystems = new ArrayList<>();
+    @OneToMany
+    private RoSystem roSystem ;
 }
