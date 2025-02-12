@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.thexbyte.bioaqua.entites.RoSystem;
 import com.thexbyte.bioaqua.entites.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RoSystemRepository extends JpaRepository<RoSystem , Long> {
-    Optional<RoSystem> findAllByOwner(User user);
+    List<RoSystem> findAllByOwner(User user);
 }

@@ -38,7 +38,7 @@ public class UserService {
         }
         var error = new ResponseMsg();
         error.setMessage("No user found");
-        return ResponseEntity.status(200).body(error);
+        return ResponseEntity.status(404).body(error);
     }
     public ResponseEntity<?> deleteById(Long id){
         Optional<User> optionalUser = userRepository.findById(id);
@@ -50,7 +50,7 @@ public class UserService {
         }
         var error = new ResponseMsg();
         error.setMessage("No user found");
-        return ResponseEntity.status(200).body(error);
+        return ResponseEntity.status(404).body(error);
     }
 
 }

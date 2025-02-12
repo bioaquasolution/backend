@@ -45,7 +45,7 @@ public class ComponentService {
     public ResponseEntity<?> getComponentsByRoSystemId(Long id) {
         Optional<RoSystem> roSystem = roSystemRepository.findById(id);
         if (roSystem.isPresent()){
-            return ResponseEntity.ok(componentRepository.findByRoSystemsComponents(roSystem.get()));
+            return ResponseEntity.ok(componentRepository.findByRoSystems(roSystem.get()));
         }
         else
             return  ResponseEntity.status(400).body("no system exist");

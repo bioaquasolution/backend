@@ -1,12 +1,17 @@
 package com.thexbyte.bioaqua.services;
  
+import aj.org.objectweb.asm.commons.Remapper;
 import com.thexbyte.bioaqua.entites.RoSystem;
 import com.thexbyte.bioaqua.entites.Component;
+import com.thexbyte.bioaqua.entites.User;
 import com.thexbyte.bioaqua.repositories.ComponentRepository;
 import com.thexbyte.bioaqua.repositories.RoSystemRepository;
 import com.thexbyte.bioaqua.repositories.UserRepository;
 
- import org.springframework.beans.factory.annotation.Autowired;
+import com.thexbyte.bioaqua.utils.ResponseMsg;
+import com.thexbyte.bioaqua.utils.RoSystemRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +30,21 @@ public class RoSystemService {
     private ComponentRepository componentRepository;
 
     // Create or Update an RoSystem
-    public RoSystem saveRoSystem(RoSystem roSystem) {
-        return roSystemRepository.save(roSystem);
+    public ResponseEntity<?> saveRoSystem(RoSystemRequest roSystem) {
+        Optional<User> owner = userRepository.findById(roSystem.getOwnerId());
+        if (owner.isPresent()){
+            RoSystem system = new RoSystem();
+            system.setCapacity(roSystem.getCapacity());
+            system.setName(roSystem.getName());
+            system.setDimensions(roSystem.getDimensions());
+            system.setSerialNumber(roSystem.getSerialNumber());
+            system.setInstallationDate(roSystem.getInstallationDate());
+            system.setModel(roSystem.getModel());
+            system.setOwner(owner.get());
+            return ResponseEntity.ok( roSystemRepository.save(system));
+
+        }else
+            return ResponseEntity.status(400).body(new ResponseMsg("mal formatted data"));
     }
 
     // Get all RoSystems
@@ -64,5 +82,13 @@ public class RoSystemService {
 
         roSystem.getComponents().remove(component);
         return roSystemRepository.save(roSystem);
+    }
+
+    public ResponseEntity<?> getRoSystemByOwnerId(Long id) {
+        Optional<User> owner = userRepository.findById(id);
+        if (owner.isPresent()){
+            return ResponseEntity.ok(roSystemRepository.findAllByOwner(owner.get()));
+        }
+        return ResponseEntity.status(400).body(new ResponseMsg("no systems found"));
     }
 }

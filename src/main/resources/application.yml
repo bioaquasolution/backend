@@ -14,19 +14,28 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: abderrahmentalby@gmail.com
-    password: hojr gror tvcy bnnf
+    host: smtp.zoho.com
+    port: 465
+    username: abderrahmen.talby@thexbyte.com.tn
+    password: 4S0JQSqnU0zC
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-        transport.protocol: smtp
+        transport.protocol: smtps
         debug: true
   servlet:
+    context-path: /api
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  show-actuator: true
+  packages-to-scan: com.thexbyte.bioaqua.controllers

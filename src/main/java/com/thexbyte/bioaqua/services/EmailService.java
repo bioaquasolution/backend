@@ -45,13 +45,13 @@ public class EmailService {
                 "</body>" +
                 "</html>";
 
-        String emailContent = String.format(htmlTemplate, application.getName(), downloadLink);
+        String emailContent = String.format(htmlTemplate, "s;kj", downloadLink);
 
         try {
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
+            helper.setFrom("abderrahmen.talby@thexbyte.com.tn");
             helper.setTo(to);
             helper.setSubject("Your Application is Ready");
             helper.setText(emailContent, true);
@@ -91,7 +91,7 @@ public class EmailService {
          try {
              MimeMessage message = mailSender.createMimeMessage();
              MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
+             helper.setFrom("abderrahmen.talby@thexbyte.com.tn");
              helper.setTo(to);
              helper.setSubject("Your Confirmation Code");
              helper.setText(emailContent, true);
@@ -138,7 +138,7 @@ public class EmailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
+            helper.setFrom("abderrahmen.talby@thexbyte.com.tn");
             helper.setTo(email);
             helper.setSubject("Your Account is Now Active");
             helper.setText(emailContent, true);
@@ -187,6 +187,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(email);
+            helper.setFrom("abderrahmen.talby@thexbyte.com.tn");
             helper.setSubject("Your New Password");
             helper.setText(emailContent, true);
             mailSender.send(message);

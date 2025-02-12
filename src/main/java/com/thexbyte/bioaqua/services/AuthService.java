@@ -15,6 +15,7 @@ import com.thexbyte.bioaqua.utils.ResponseMsg;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -29,13 +30,17 @@ import java.util.Random;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class AuthService {
-    private final UserRepository userRepo;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
-    private final EmailService emailService;
+    @Autowired
+    private  UserRepository userRepo;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private  JwtService jwtService;
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+    @Autowired
+    private  EmailService emailService;
 
 
     public ResponseEntity<?> register(User user) {
@@ -77,8 +82,7 @@ public class AuthService {
         Optional<User> optionalUser = userRepo.findByEmail(loginRequest.getEmail());
         if (optionalUser.isPresent()) {
             UserDetails user = optionalUser.get();
-            log.info(loginRequest.getEmail());
-            log.info(loginRequest.getPassword());
+
             if (!user.isEnabled()) {
                 return ResponseEntity.status(401).body(new ResponseMsg("Account not active yet"));
             }
@@ -92,12 +96,10 @@ public class AuthService {
             } catch (BadCredentialsException e) {
               return ResponseEntity.status(401).body(new ResponseMsg("Bad Credentials"));
             }
-            log.info("after the authentication ");
             var JwtToken = jwtService.generateToken(user);
-            log.info(JwtToken);
-            return ResponseEntity.ok(AuthenticationResponse.builder()
-                    .token(JwtToken)
-                    .build());
+            return ResponseEntity.ok(
+                    new
+                    AuthenticationResponse(JwtToken));
         } else {
             return  ResponseEntity.status(401).body(new ResponseMsg("Bad Credentials"));
         }

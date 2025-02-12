@@ -1,9 +1,7 @@
 package com.thexbyte.bioaqua.entites;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,5 +30,8 @@ public class RoSystem {
         inverseJoinColumns = @JoinColumn(name = "component_id")
     )
     private List<Component> components = new ArrayList<>();
+
+    @OneToMany
+    private List<Alert> alerts = new ArrayList<>();
 
 }

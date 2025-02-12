@@ -42,8 +42,11 @@ public class SecurityConfiguration {
                             "/api/auth/login",
                             "/api/auth/confirm-email",
                             "/api/auth/forget-password",
-                            "swagger-ui.html",
-                            "/swagger-ui/index.html"
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/swagger-resources/**",
+                            "/webjars/**"
                             ).permitAll();
                     authConfig.requestMatchers("/error").permitAll();
                     authConfig.anyRequest().authenticated();

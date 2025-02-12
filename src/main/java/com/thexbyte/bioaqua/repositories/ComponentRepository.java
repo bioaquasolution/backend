@@ -9,6 +9,6 @@ import com.thexbyte.bioaqua.entites.RoSystem;
 
 public interface ComponentRepository extends JpaRepository<Component , Long>  {
 
-     List<Component> findByRoSystemsComponents(RoSystem roSystem);
+     List<Component> findByRoSystems(RoSystem roSystem);
     
 }

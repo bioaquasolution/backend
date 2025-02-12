@@ -1,9 +1,7 @@
 package com.thexbyte.bioaqua.entites;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,10 +18,10 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title; 
-    private String siverity;
+    private String severity;
     private String content;
     private Date alertDate;
     @JsonIgnore
-    @OneToMany
+    @ManyToOne
     private RoSystem roSystem ;
 }
