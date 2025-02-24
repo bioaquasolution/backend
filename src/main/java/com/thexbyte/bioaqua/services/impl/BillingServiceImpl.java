@@ -4,9 +4,14 @@ import com.thexbyte.bioaqua.entites.*;
 import com.thexbyte.bioaqua.repositories.BillingRepository;
 import com.thexbyte.bioaqua.repositories.PaymentHistoryRepository;
 import com.thexbyte.bioaqua.repositories.RecurringBillingRepository;
+import com.thexbyte.bioaqua.repositories.RoSystemRepository;
+import com.thexbyte.bioaqua.repositories.UserRepository;
 import com.thexbyte.bioaqua.services.BillingService;
 import com.thexbyte.bioaqua.services.PdfGenerationService;
+import com.thexbyte.bioaqua.utils.CreateBillingRequest;
 import com.thexbyte.bioaqua.utils.PaymentRequest;
+import com.thexbyte.bioaqua.utils.ResponseMsg;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -14,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +33,8 @@ public class BillingServiceImpl implements BillingService {
     private final RecurringBillingRepository recurringBillingRepository;
     private final ResourceLoader resourceLoader;
     private final PdfGenerationService pdfGenerationService;
+    private final RoSystemRepository roSystemRepository;
+    private final UserRepository userRepository;
 
     @Override
     public ResponseEntity<?> getAllBills() {
@@ -42,10 +51,81 @@ public class BillingServiceImpl implements BillingService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> createBill(Billing billing) {
-        billing.setStatus(BillingStatus.PENDING);
-        billing.setBillingDate(new Date());
-        return ResponseEntity.ok(billingRepository.save(billing));
+    public ResponseEntity<?> createBill(CreateBillingRequest request) {
+        try {
+            Billing billing = new Billing();
+
+            // Validate and set RO System
+            RoSystem roSystem = roSystemRepository.findById(request.getRoSystemId())
+                    .orElseThrow(() -> new RuntimeException("RO System not found"));
+            billing.setRoSystem(roSystem);
+
+            // Validate and set Client
+            User client = userRepository.findById(request.getClientId())
+                    .orElseThrow(() -> new RuntimeException("Client not found"));
+            billing.setClient(client);
+
+            // Set basic billing information
+            billing.setAmount(request.getAmount());
+            billing.setInvoiceNumber(request.getInvoiceNumber());
+            billing.setBillingDate(request.getBillingDate());
+            billing.setDueDate(request.getDueDate());
+            billing.setDescription(request.getDescription());
+            billing.setBillingAddress(request.getBillingAddress());
+            billing.setStatus(BillingStatus.PENDING);
+            billing.setIsPaid(false);
+
+            // Set dates if not provided
+            if (billing.getBillingDate() == null) {
+                billing.setBillingDate(new Date());
+            }
+            if (billing.getDueDate() == null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(billing.getBillingDate());
+                calendar.add(Calendar.DATE, 30);
+                billing.setDueDate(calendar.getTime());
+            }
+
+            // Process billing items
+            if (request.getItems() != null && !request.getItems().isEmpty()) {
+                List<BillingItem> items = new ArrayList<>();
+                double subtotal = 0.0;
+                double totalTax = 0.0;
+
+                for (CreateBillingRequest.BillingItemRequest itemRequest : request.getItems()) {
+                    BillingItem item = new BillingItem();
+                    item.setBilling(billing);
+                    item.setDescription(itemRequest.getDescription());
+                    item.setQuantity(itemRequest.getQuantity());
+                    item.setUnitPrice(itemRequest.getUnitPrice());
+                    item.setTaxRate(itemRequest.getTaxRate());
+
+                    // Calculate item total
+                    double itemTotal = item.getQuantity() * item.getUnitPrice();
+                    item.setTotal(itemTotal);
+                    subtotal += itemTotal;
+
+                    // Calculate tax
+                    double itemTax = itemTotal * item.getTaxRate();
+                    item.setTaxAmount(itemTax);
+                    totalTax += itemTax;
+
+                    items.add(item);
+                }
+
+                billing.setItems(items);
+                billing.setSubtotal(subtotal);
+                billing.setTaxAmount(totalTax);
+                billing.setTotal(subtotal + totalTax);
+            }
+
+            // Save the billing
+            Billing savedBilling = billingRepository.save(billing);
+            return ResponseEntity.ok(savedBilling);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ResponseMsg("Failed to create billing: " + e.getMessage()));
+        }
     }
 
     @Override

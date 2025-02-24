@@ -1,5 +1,6 @@
 package com.thexbyte.bioaqua.entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,5 +22,6 @@ public class BillingItem {
     private Double taxAmount = 0.0;
     
     @ManyToOne
+    @JsonIgnore
     private Billing billing;
 } 

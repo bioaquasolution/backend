@@ -43,8 +43,8 @@ public class AlertService {
         return ResponseEntity.ok( alertRepository.findAll());
     }
 
-     public Optional<Alert> getAlertById(Long id) {
-        return alertRepository.findById(id);
+     public ResponseEntity<Optional<Alert>> getAlertById(Long id) {
+        return  ResponseEntity.ok(alertRepository.findById(id));
     }
 
      public void deleteAlert(Long id) {

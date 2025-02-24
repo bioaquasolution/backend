@@ -2,6 +2,7 @@ package com.thexbyte.bioaqua.services;
 
 import com.thexbyte.bioaqua.entites.Billing;
 import com.thexbyte.bioaqua.entites.RecurringBilling;
+import com.thexbyte.bioaqua.utils.CreateBillingRequest;
 import com.thexbyte.bioaqua.utils.PaymentRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 public interface BillingService {
     ResponseEntity<?> getAllBills();
     ResponseEntity<?> getBillById(Long id);
-    ResponseEntity<?> createBill(Billing billing);
+    ResponseEntity<?> createBill(CreateBillingRequest request);
     ResponseEntity<?> updateBill(Long id, Billing billing);
     ResponseEntity<?> deleteBill(Long id);
     ResponseEntity<?> getClientBills(Long clientId);

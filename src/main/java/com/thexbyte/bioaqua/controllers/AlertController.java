@@ -33,4 +33,10 @@ public class AlertController {
     public ResponseEntity<?> getAlertsBySystemId(@PathVariable("id") Long sysId) {
         return alertService.getAlertsByRoSystemId(sysId);
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get alert by ID", description = "Retrieves alert By ID.")
+    public ResponseEntity<?> getAlertById(@PathVariable("id") Long id) {
+        return alertService.getAlertById(id);
+    }
 }

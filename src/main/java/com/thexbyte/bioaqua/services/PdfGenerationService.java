@@ -69,7 +69,7 @@ public class PdfGenerationService {
         // Bill To section
         addCell(table, "Bill To:", HEADER_FONT);
         addCell(table, "RO System Details:", HEADER_FONT);
-        addCell(table, billing.getClient().getUsername(), NORMAL_FONT);
+        addCell(table, billing.getRoSystem().getOwner().getUsername(), NORMAL_FONT);
         addCell(table, "System: " + billing.getRoSystem().getName(), NORMAL_FONT);
         addCell(table, billing.getBillingAddress(), NORMAL_FONT);
         addCell(table, "Model: " + billing.getRoSystem().getModel(), NORMAL_FONT);

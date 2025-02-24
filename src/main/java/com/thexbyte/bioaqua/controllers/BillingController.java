@@ -4,6 +4,7 @@ import com.thexbyte.bioaqua.entites.Billing;
 import com.thexbyte.bioaqua.entites.RecurringBilling;
 import com.thexbyte.bioaqua.services.BillingService;
 import com.thexbyte.bioaqua.utils.PaymentRequest;
+import com.thexbyte.bioaqua.utils.CreateBillingRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,8 +37,8 @@ public class BillingController {
 
     @PostMapping
     @Operation(summary = "Create new bill", description = "Creates a new billing record")
-    public ResponseEntity<?> createBill(@RequestBody Billing billing) {
-        return billingService.createBill(billing);
+    public ResponseEntity<?> createBill(@RequestBody CreateBillingRequest request) {
+        return billingService.createBill(request);
     }
 
     @PutMapping("/{id}")

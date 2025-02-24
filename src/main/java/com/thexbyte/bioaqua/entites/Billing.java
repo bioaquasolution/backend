@@ -1,5 +1,6 @@
 package com.thexbyte.bioaqua.entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Billing {
     
     @ManyToOne
     private RoSystem roSystem;
-    
+
     @ManyToOne
     private User client;
     
@@ -34,9 +35,11 @@ public class Billing {
     private String description;
     
     @OneToMany(mappedBy = "billing", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<PaymentHistory> paymentHistory = new ArrayList<>();
     
     @ManyToOne
+    @JsonIgnore
     private RecurringBilling recurringBilling;
     
     // Fields for invoice generation
@@ -48,5 +51,5 @@ public class Billing {
     private String currency = "USD";
     
     @OneToMany(cascade = CascadeType.ALL)
-    private List<BillingItem> items = new ArrayList<>();
+     private List<BillingItem> items = new ArrayList<>();
 } 
