@@ -1,48 +1,53 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven3' // Ensure Maven is installed and configured in Jenkins
+
+    environment {
+        IMAGE_NAME = "spring-api"
+        CONTAINER_NAME = "spring-api-container"
+        REPO = "your-docker-repo/spring-api"
     }
-    triggers {
-            pollSCM('H/1 * * * *') // Poll every 5 minutes
-        }
+
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Checkout code from the Git repository using SSH
-                git branch: 'main', credentialsId: 'ssh_bioaqua_api', url: 'git@github.com:abdoutalby/bioaqua_solution_api.git'
+                git branch: 'main', credentialsId: 'your-credential-id', url: 'git@github.com:your-user/your-repo.git'
             }
         }
 
-        stage('Build with Maven') {
+        stage('Build Jar') {
             steps {
-                // Run Maven build to create the Spring Boot JAR file
-                sh 'mvn clean package -DskipTests'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                // Build the Docker image for the application
-                sh 'docker build -t spring-api:latest .'
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
-        stage('Deploy Application') {
+        stage('Stop & Remove Old Container') {
             steps {
-                // Stop and remove any running container, then deploy the updated one
-                sh '(docker stop spring-api && docker rm spring-api) || true'
-                sh 'docker run -d  --network jenkins_bioaqua-network -p 9080:8080 --name spring-api  spring-api:latest'
+                script {
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    sh "docker rm ${CONTAINER_NAME} || true"
+                }
+            }
+        }
+
+        stage('Run New Container') {
+            steps {
+                sh "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}"
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline executed successfully. Application deployed.'
+            echo "Deployment successful!"
         }
         failure {
-            echo 'Pipeline failed. Check the logs for details.'
+            echo "Deployment failed!"
         }
     }
 }
