@@ -2,7 +2,7 @@ spring:
   application:
     name: bioaqua
   datasource:
-    url: jdbc:mysql://localhost:3306/bioaqua?createDatabaseIfNotExist=true
+    url: jdbc:mysql://mysql-db:3306/bioaqua?createDatabaseIfNotExist=true
     username: root
     password: roottoor
     driver-class-name: com.mysql.cj.jdbc.Driver
