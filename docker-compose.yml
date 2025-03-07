@@ -13,7 +13,7 @@ services:
       - mysql_data:/var/lib/mysql
 
   springboot-app:
-    image: your-spring-boot-app:latest
+    image:  bioaqua-api:latest
     container_name: springboot_app
     ports:
       - "8080:8080"
