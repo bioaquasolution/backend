@@ -13,12 +13,6 @@ pipeline {
             }
         }
 
-        stage('Build Spring Boot App') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
