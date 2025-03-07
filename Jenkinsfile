@@ -8,7 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/bioaquasolution/backend.git'
+                git branch: 'main', 
+                    url: 'https://github.com/bioaquasolution/backend.git'
             }
         }
 
