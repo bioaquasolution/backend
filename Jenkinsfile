@@ -2,52 +2,44 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "spring-api"
-        CONTAINER_NAME = "spring-api-container"
-        REPO = "your-docker-repo/spring-api"
+        DOCKER_IMAGE = 'bioaqua-api'
     }
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'your-credential-id', url: 'git@github.com:your-user/your-repo.git'
+                git 'https://github.com/bioaquasolution/backend.git'
             }
         }
 
-        stage('Build Jar') {
+        stage('Build Spring Boot App') {
             steps {
-                sh './mvnw clean package -DskipTests'
+                sh 'mvn clean package'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME} ."
-            }
-        }
-
-        stage('Stop & Remove Old Container') {
-            steps {
                 script {
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
+                    docker.build("${DOCKER_IMAGE}:latest")
                 }
             }
         }
 
-        stage('Run New Container') {
+        stage('Deploy with Docker Compose') {
             steps {
-                sh "docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}"
+                sh 'docker-compose down'  
+                sh 'docker-compose up -d'  
             }
         }
     }
 
     post {
         success {
-            echo "Deployment successful!"
+            echo 'Deployment successful!'
         }
         failure {
-            echo "Deployment failed!"
+            echo 'Deployment failed!'
         }
     }
 }
