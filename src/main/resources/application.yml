@@ -39,3 +39,5 @@ springdoc:
     enabled: true
   show-actuator: true
   packages-to-scan: com.thexbyte.bioaqua.controllers
+server:
+  port: 8081 
