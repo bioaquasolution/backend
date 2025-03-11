@@ -15,8 +15,8 @@ public class FirebaseConfig {
 
     @PostConstruct
     public void initialize() throws IOException {
-        // Load the firebase-adminsdk.json file from the classpath
-        InputStream serviceAccount = new FileInputStream("src/main/resources/firebase-adminsdk.json");
+        // Load the firebase-adminsdk.json file from the mounted path
+        InputStream serviceAccount = new FileInputStream("/app/secrets/firebase-adminsdk.json");
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
