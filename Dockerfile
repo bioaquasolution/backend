@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy Maven configuration files and download dependencies (cached for subsequent builds)
 COPY pom.xml .
 COPY src ./src
- 
+COPY firebase-adminsdk.json ./src/main/resources/firebase-adminsdk.json
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create a lightweight runtime image
